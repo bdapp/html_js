@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSON自动生成</title>
+    <style type="text/css">
+        h4 {
+            font-size:16px;
+            color: #0066FF;}
+
+        input {background-color: transparent;
+            border: solid #0A8CD2 1px;
+            padding:5px;
+            font-size:16px;
+        margin-right: 10px;
+            margin-top:10px;}
+
+        input:hover, input:focus {border: solid #ff0000 1px;
+            outline:none;}
+
+        hr {outline:none;
+            border: dashed #aaaccc 0.1px;}
+
+        .btn-add {}
+
+        .removeclass {
+            font-size:18px;
+        margin-right: 10px;}
+
+
+    </style>
+    <script src="./jquery-1.9.1.min.js"></script>
+
+</head>
+<body>
+<!--<form>-->
+    <h3>JSON示例生成</h3>
+
+    <div id="InputsWrapper">
+        <h4>第一层 </h4><a href="#" id="AddMoreFileBox" class="btn-add">添加参数</a>
+        <div><input type="text" id="field_1" value=""/><input type="text" id="value_1" value=""/><a href="#" class="removeclass">×</a></div>
+    </div>
+
+<hr  />
+
+    <div id="InputsWrapper2">
+        <h4>第二层</h4> <a href="#" id="AddMoreFileBox2" class="btn btn-info">添加参数</a>
+        <div><input type="text" id="field2_1" value=""/><input type="text" id="value2_1" value=""/><a href="#" class="removeclass2">×</a></div>
+    </div>
+
+<hr  />
+
+    <div id="InputsWrapper3">
+        <h4>第三层</h4> <a href="#" id="AddMoreFileBox3" class="btn btn-info">添加参数</a>
+        <div><input type="text" id="field3_1" value=""/><input type="text" id="value3_1" value=""/><a href="#" class="removeclass3">×</a></div>
+    </div>
+
+<hr  />
+    <!--点击生成-->
+    <input type="submit" class="createClass" name="create" id="submit_json" value="Create"/>
+
+    <p id="json_result"></p>
+<!--</form>-->
+</body>
+
+<script>
+    $(document).ready(function () {
+
+        var MaxInputs = 30; //maximum input boxes allowed
+        var InputsWrapper = $("#InputsWrapper"); //Input boxes wrapper ID
+        var InputsWrapper2 = $("#InputsWrapper2"); //Input boxes wrapper ID
+        var InputsWrapper3 = $("#InputsWrapper3"); //Input boxes wrapper ID
+
+        var AddButton = $("#AddMoreFileBox"); //Add button ID
+        var AddButton2 = $("#AddMoreFileBox2"); //Add button ID
+        var AddButton3 = $("#AddMoreFileBox3"); //Add button ID
+
+        var x = InputsWrapper.length; //initlal text box count
+        var y = InputsWrapper2.length; //initlal text box count
+        var z = InputsWrapper3.length; //initlal text box count
+        var FieldCount = 1; //to keep track of text box added
+        var FieldCount2 = 1; //to keep track of text box added
+        var FieldCount3 = 1; //to keep track of text box added
+
+        $(AddButton).click(function (e)  //on add input button click
+        {
+            if (x <= MaxInputs) //max input box allowed
+            {
+                FieldCount++; //text box added increment
+                //add input box
+                $(InputsWrapper).append('<div><input type="text" id="field_' + FieldCount + '" value=""/><input type="text" id="value_' + FieldCount + '" value=""/><a href="#" class="removeclass">×</a></div>');
+                x++; //text box increment
+            }
+            return false;
+        });
+
+        $(AddButton2).click(function (e)  //on add input button click
+        {
+            if (y <= MaxInputs) //max input box allowed
+            {
+                FieldCount2++; //text box added increment
+                //add input box
+                $(InputsWrapper2).append('<div><input type="text" id="field2_' + FieldCount2 + '" value=""/><input type="text" id="value2_' + FieldCount2 + '" value=""/><a href="#" class="removeclass2">×</a></div>');
+                y++; //text box increment
+            }
+            return false;
+        });
+
+        $(AddButton3).click(function (e)  //on add input button click
+        {
+            if (z <= MaxInputs) //max input box allowed
+            {
+                FieldCount3++; //text box added increment
+                //add input box
+                $(InputsWrapper3).append('<div><input type="text" id="field3_' + FieldCount3 + '" value=""/><input type="text" id="value3_' + FieldCount3 + '" value=""/><a href="#" class="removeclass3">×</a></div>');
+                z++; //text box increment
+            }
+            return false;
+        });
+
+        $("body").on("click", ".removeclass", function (e) { //user click on remove text
+            if (x > 1) {
+                $(this).parent('div').remove(); //remove text box
+                x--; //decrement textbox
+            }
+            return false;
+        });
+
+        $("body").on("click", ".removeclass2", function (e) { //user click on remove text
+            if (y > 1) {
+                $(this).parent('div').remove(); //remove text box
+                y--; //decrement textbox
+            }
+            return false;
+        });
+
+        $("body").on("click", ".removeclass3", function (e) { //user click on remove text
+            if (z > 1) {
+                $(this).parent('div').remove(); //remove text box
+                z--; //decrement textbox
+            }
+            return false;
+        });
+
+        $("body").on("click", ".createClass", function (e) { //user click on remove text
+
+            var layout3 = new Object();
+            for(var i=1; i<=MaxInputs; i++){
+                var k = $("#field3_"+i).val();
+                var v = $("#value3_"+i).val();
+
+                layout3[k] = v;
+            }
+
+            var layout2 = new Object();
+            for(var i=1; i<=MaxInputs; i++){
+                var k = $("#field2_"+i).val();
+                var v = $("#value2_"+i).val();
+
+                layout2[k] = v;
+            }
+            layout2['listdata'] = layout3;
+
+            var layout1 = new Object();
+            for (var i=1; i<=MaxInputs; i++){
+                var k = $("#field_"+i).val();
+                var v = $("#value_"+i).val();
+
+                layout1[k] = v;
+            }
+            layout1['data'] = layout2;
+
+            json1 = JSON.stringify(layout1);
+            console.log(json1);
+
+            $("#json_result").text(json1)
+        });
+
+    });
+</script>
+</html>
